@@ -57,6 +57,13 @@ void main()
 	}
 
 	// Bind the IP_ADDRESS and PORT to our socket
+	/*
+		The sockaddr_in struct will contain the information that winsock will use to make system calls.
+
+		After a socket() call, the socket exists in a name space (address family) but has no address assigned to it.
+
+		bind() assigns the address specified our sockaddr_in struct to our socket. This is traditionally referred to as "assigning a name to a socket".
+	*/
 	sockaddr_in hint;
 	hint.sin_family = AF_INET;
 	hint.sin_port = htons(54000);
