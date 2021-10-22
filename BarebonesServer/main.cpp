@@ -113,6 +113,11 @@ void main()
 
 		----------
 
+		getnameinfo() converts a socket address to a corresopnding host and service, in a protocol-independent manner.
+
+		inet_ntop() converts the network address structure src in the af addres family into a character string.
+
+		our host[] and service[] arrays are simply buffers. These buffers will be used by either getnameinfo() or inet_ntop() to fill in the data that they convert from the network.
 
 	*/
 	char host[NI_MAXHOST];		// Client's remote name
@@ -134,9 +139,28 @@ void main()
 	}
 
 	// Close listening socket
+	/*
+		We only care about connecting one client to our server, so we can close our listening socket after establishing a connected socket.
+	*/
 	closesocket(listening);
 
 	// While loop: accept and echo message back to client
+	/*
+		recv(), recvfrom(), and recvmsg() calls are used to RECEIVE MESSAGES FROM A SOCKET. All three calls return the LENGTH of the message received on success, or -1 if failure. If message is larger than buffer, excess bytes may be discarded.
+
+		Only difference between recv() and read() is that recv() has flags.
+
+		recv(), like accept() waits for a message to be present unless it's specified as non-blocking.
+
+		-----------
+
+		The system calls send(), sendto(), and sendmsg() are used to transmit a message to another socket.
+
+		send() call may only be used when the socket is in a CONNECTED state.
+
+
+
+	*/
 	char buf[4096];
 
 	while (true)
@@ -156,7 +180,7 @@ void main()
 			break;
 		}
 
-		std::cout << std::string(buf, 0, bytesReceived) << std::endl;
+		std::cout << "Received: " << std::string(buf, 0, bytesReceived) << "of byte size: " << bytesReceived << std::endl;
 
 		// Echo message back to client
 		send(clientSocket, buf, bytesReceived + 1, 0);
