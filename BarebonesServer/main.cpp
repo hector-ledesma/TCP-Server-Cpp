@@ -72,7 +72,12 @@ void main()
 	bind(listening, (sockaddr*)&hint, sizeof(hint));
 
 	// Tell winsock socket is for LISTENING
-	listen(listening, SOMAXCONN);
+	/*
+		listening() marks the socket as a PASSIVE socket. A socket that will be used to accept INCOMING connection requests using accept().
+
+		The second parameter specifies the maximum length to which the queue of pending connections may grow.
+	*/
+	listen(listening, SOMAXCONN); // Error checking would be required here.
 
 	// Wait for a connection
 	sockaddr_in client;
