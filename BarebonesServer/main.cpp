@@ -9,6 +9,10 @@
 void main() 
 {
 	// Initialize winsock
+	/*
+		WSADATA's is for the developer. It provides YOU information on how winsock was initialized.
+		This information is filled out by your call to WSAStartup(version, dataPTR);
+	*/
 	WSADATA wsData;
 	/*
 		MAKEWORD is a MACRO equivalent to (x) | (y) << 8
@@ -20,6 +24,11 @@ void main()
 	*/
 	WORD ver = MAKEWORD(2, 2);
 
+	/*
+		WSAStartup will initialize all of the "behind the scene"/WinSock.dll and initialize the structs necessary to make the Socket related system calls.
+
+		Every process that uses WiNSock must call WSAStartup within its own memory space.
+	*/
 	int wsOk = WSAStartup(ver, &wsData);
 
 	if (wsOk != 0) {
@@ -28,9 +37,17 @@ void main()
 	}
 	// Create a socket
 	/*
+		socket() returns the file descriptor to the Socket that Windows is about to make available to you.
+
+		File descriptors are like a "ticket" that your process can then use to utilize a resource. In this case, the resource is a Socket created by your system.
+
+		---------------------------
+
 		AF stands for Address Family
 
 		AF_INET is used to designate the type of addresses that your socket can communicate with to IPv4
+
+		AF_INET6 is to use IPv6.
 	*/
 	SOCKET listening = socket(AF_INET, SOCK_STREAM, 0);
 	if (listening == INVALID_SOCKET)
