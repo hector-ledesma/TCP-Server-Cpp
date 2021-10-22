@@ -66,11 +66,6 @@ void main()
 	*/
 	sockaddr_in hint;
 	hint.sin_family = AF_INET;
-	/*
-		htons() and ntohs() methods handle converting bytes between little and big endian.
-
-		htons() = most significant byte first.
-	*/
 	hint.sin_port = htons(54000);
 	hint.sin_addr.S_un.S_addr = INADDR_ANY; // Could also use inet_pton...
 
@@ -106,15 +101,6 @@ void main()
 	}
 	std::cout << "This is AFTER the accept() call." << std::endl;
 
-	/*
-		ZeroMemory is a macro that fills a block of memory with 0s.
-			|-- param1) Pointer to starting address of the block of mem.
-			|-- param2) Size of the block of memory in bytes.
-
-		----------
-
-
-	*/
 	char host[NI_MAXHOST];		// Client's remote name
 	char service[NI_MAXSERV];	// Service (i.e. port) the client is connected on
 
