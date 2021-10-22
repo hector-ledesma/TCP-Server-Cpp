@@ -80,13 +80,26 @@ void main()
 	listen(listening, SOMAXCONN); // Error checking would be required here.
 
 	// Wait for a connection
+	/*
+		The accept() call BLOCKS execution until there is a connection request present in the queue.
+
+		Once there is a connection request, a socket is created to communicate with that specific connection. It creates a new FILE_DESCRIPTOR for this connected socket. This new socket is NOT in a listening state.
+
+		Original socket is unaffected by this call. We simply use it to access its queue.
+
+		The second argument will hold the socket.
+
+		The third argument determines the size of the socket's address. If the size is too small, the address will be truncated.
+	*/
 	sockaddr_in client;
 	int clientSize = sizeof(client);
 
+	std::cout << "This is before the accept() call." << std::endl;
 	SOCKET clientSocket = accept(listening, (sockaddr*)&clientSocket, &clientSize);
 	if (clientSocket == INVALID_SOCKET) {
 		std::cerr << "Client returned an invalid socket! Quitting" << std::endl;
 	}
+	std::cout << "This is AFTER the accept() call." << std::endl;
 
 	char host[NI_MAXHOST];		// Client's remote name
 	char service[NI_MAXSERV];	// Service (i.e. port) the client is connected on
