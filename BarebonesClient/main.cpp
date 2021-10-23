@@ -1,20 +1,77 @@
-// BarebonesClient.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+#include <string>
+#include <ws2tcpip.h>
+#pragma comment(lib, "ws2_32.lib")
 
-int main()
+void main()
 {
-    std::cout << "Hello World!\n";
+	std::string ipAddress = "127.0.0.1";		// IP Address of the server
+	int port = 54000;
+
+	//	Initialize WinSock
+	WSAData data;
+	WORD ver = MAKEWORD(2, 2);
+	int wsResult = WSAStartup(ver, &data);
+	if (wsResult != 0)
+	{
+		std::cerr << "Can't start Winsock, Err #" << wsResult << std::endl;
+	}
+
+	//	Create socket
+	SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
+	if (sock == INVALID_SOCKET)
+	{
+		std::cerr << "Can't create socket, Err #" << WSAGetLastError() << std::endl;
+		WSACleanup();
+		return;
+	}
+
+	//	Fill in a hint structure
+	sockaddr_in hint;
+	hint.sin_family = AF_INET;
+	hint.sin_port = htons(port);
+	inet_pton(AF_INET, ipAddress.c_str(), &hint.sin_addr);
+
+	//	Connect to server
+	int connResult = connect(sock, (sockaddr*)&hint, sizeof(hint));
+	if (connResult == SOCKET_ERROR)
+	{
+		std::cerr << "Can't connect to server, Err #" << WSAGetLastError() << std::endl;
+		closesocket(sock);
+		WSACleanup();
+	}
+
+	//	Do-while loop to send and receive data
+	char buf[4096];
+	std::string userInput;
+
+	do
+	{
+		//	Prompt the user for some text
+		std::cout << "> ";
+		std::getline(std::cin, userInput);
+
+		if (userInput.size() > 0)
+		{
+			//	Send the text
+			int sendResult = send(sock, userInput.c_str(), userInput.size() + 1, 0);
+			if (sendResult != SOCKET_ERROR)
+			{
+				//	Wait for response
+				ZeroMemory(buf, 4096);
+				int bytesReceived = recv(sock, buf, 4096, 0);
+				if (bytesReceived > 0)
+				{
+					//	Echo response to console
+					std::cout << "SERVER> " << std::string(buf, 0, bytesReceived) << std::endl;
+				}
+			}
+
+		}
+	} while (userInput.size() > 0);
+
+	//	Gracefully close down everything
+	closesocket(sock);
+	WSACleanup();
+
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
