@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include "TCPListener.h"
+#include "TCPListener.cpp"
 
 void Listener_MessageReceived(CTcpListener* listener, int client, std::string msg);
 
