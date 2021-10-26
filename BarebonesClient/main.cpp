@@ -73,5 +73,5 @@ void main()
 	//	Gracefully close down everything
 	closesocket(sock);
 	WSACleanup();
-
+	return;
 }
