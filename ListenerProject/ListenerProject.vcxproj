@@ -148,8 +148,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Qotd.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Qotd.h" />
     <ClInclude Include="TCPListener.h" />
   </ItemGroup>
   <ItemGroup>
