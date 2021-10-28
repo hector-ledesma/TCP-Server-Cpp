@@ -6,7 +6,7 @@
 /*
 	Tutorial will skip error checking. So I'll try to comment in which areas would require error checking, and what exactly could fail.
 */
-void main() 
+void notMain() 
 {
 	// Initialize winsock
 	/*
